@@ -1,12 +1,12 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // Layout Components
-import Navbar from './Navbar';
-import Footer from './Footer';
-import Landing from './Landing';
-import History from './History';
+import Navbar from './components/layout/Navbar';
+import Footer from './components/layout/Footer';
+import Landing from './pages/Landing';
+import History from './pages/History';
 // YE WALI LINE ADD KAREIN 
-import Dashboard from './Dashboard'; 
+import Dashboard from './pages/Dashboard'; 
 function App() {
   return (
     <BrowserRouter>
