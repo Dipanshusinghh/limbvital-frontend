@@ -9,7 +9,7 @@ function updateStatus(status) {
 }
 
 const WebSocketService = {
-  connect(url = 'ws://localhost:8000/ws') {
+  connect(url = import.meta.env.VITE_WS_URL || 'ws://localhost:8000/ws') {
     return new Promise((resolve, reject) => {
       try {
         socket = new WebSocket(url);
