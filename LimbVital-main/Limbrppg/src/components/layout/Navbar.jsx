@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Heart, Activity, Clock } from 'lucide-react';
+import { Heart, Activity, Clock, Menu, X } from 'lucide-react';
 
 const Navbar = () => {
   const location = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const isActive = (path) => location.pathname === path;
 
@@ -54,15 +55,48 @@ const Navbar = () => {
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
-            <button className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
+            <button 
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
 
         </div>
       </div>
+
+      {/* Mobile Menu Dropdown */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden border-t border-gray-100 bg-white">
+          <div className="px-4 pt-2 pb-4 space-y-2">
+            <MobileNavLink 
+              to="/" 
+              icon={<Heart className="w-4 h-4" />}
+              isActive={isActive('/')}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Home
+            </MobileNavLink>
+            <MobileNavLink 
+              to="/dashboard" 
+              icon={<Activity className="w-4 h-4" />}
+              isActive={isActive('/dashboard')}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Dashboard
+            </MobileNavLink>
+            <MobileNavLink 
+              to="/history" 
+              icon={<Clock className="w-4 h-4" />}
+              isActive={isActive('/history')}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              History
+            </MobileNavLink>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
@@ -76,6 +110,21 @@ const NavLink = ({ to, icon, isActive, children }) => {
 
   return (
     <Link to={to} className={`${baseClasses} ${activeClasses}`}>
+      {icon}
+      <span>{children}</span>
+    </Link>
+  );
+};
+
+// Mobile Nav Link Component
+const MobileNavLink = ({ to, icon, isActive, onClick, children }) => {
+  const baseClasses = "flex items-center space-x-3 px-4 py-3 rounded-lg font-medium transition-all duration-200 w-full";
+  const activeClasses = isActive 
+    ? "bg-red-50 text-red-600 font-bold" 
+    : "text-gray-700 hover:bg-gray-50 hover:text-red-600";
+
+  return (
+    <Link to={to} onClick={onClick} className={`${baseClasses} ${activeClasses}`}>
       {icon}
       <span>{children}</span>
     </Link>

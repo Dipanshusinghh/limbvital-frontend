@@ -23,7 +23,7 @@ const History = () => {
   };
   // ── Clear all records ───────────────────────────────────────────────────
   const clearAll = () => {
-    if (window.confirm('Saari history delete karni hai? Yeh wapas nahi aayegi.')) {
+    if (window.confirm('Are you sure you want to clear all history? This cannot be undone.')) {
       localStorage.removeItem('limbvital_records');
       setRecords([]);
     }
@@ -87,7 +87,7 @@ const History = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <StatCard icon={<Heart className="w-6 h-6" />} label="Avg Heart Rate" value={stats.avgBpm} unit="BPM" color="from-red-500 to-pink-600" />
           <StatCard icon={<TrendingUp className="w-6 h-6" />} label="Avg SpO2" value={stats.avgSpo2} unit="%" color="from-blue-500 to-cyan-600" />
-          <StatCard icon={<TrendingDown className="w-6 h-6" />} label="Avg Stress" value={stats.avgStress} unit="" color="from-purple-500 to-indigo-600" />
+          <StatCard icon={<TrendingDown className="w-6 h-6" />} label="Avg Stress" value={stats.avgStress} unit="/100" color="from-purple-500 to-indigo-600" />
           <StatCard icon={<Calendar className="w-6 h-6" />} label="Total Scans" value={stats.totalScans} unit="" color="from-green-500 to-emerald-600" />
         </div>
         {/* Controls */}
@@ -127,8 +127,8 @@ const History = () => {
             <h3 className="text-xl font-semibold text-gray-600 mb-2">No Records Found</h3>
             <p className="text-gray-500">
               {records.length === 0
-                ? 'Dashboard pe scan karo aur Stop Scan dabao — reading yahan save ho jaayegi!'
-                : 'Is time period mein koi record nahi hai.'}
+                ? 'Complete a scan on the dashboard and click Stop Scan to save your reading here!'
+                : 'No records found for the selected time period.'}
             </p>
           </div>
         ) : (

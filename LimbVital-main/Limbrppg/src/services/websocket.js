@@ -15,7 +15,7 @@ const WebSocketService = {
         socket = new WebSocket(url);
         
         socket.onopen = () => {
-          console.log('Connected to server!');
+          console.log('Connected to Backend Server!');
           reconnectCount = 0;
           updateStatus('connected');
           resolve();
@@ -29,7 +29,6 @@ const WebSocketService = {
         socket.onerror = (err) => {
           console.log('WS Error:', err);
           updateStatus('error');
-          // If we fail during connect, reject the promise
           if (socket.readyState !== WebSocket.OPEN) {
             reject(err);
           }
@@ -83,6 +82,7 @@ const WebSocketService = {
       socket.close();
       socket = null;
     }
+    updateStatus('disconnected');
   }
 };
 

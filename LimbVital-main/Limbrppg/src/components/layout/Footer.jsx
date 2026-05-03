@@ -1,5 +1,6 @@
 import React from 'react';
 import { Heart, Github, Twitter, Mail } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -27,10 +28,9 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold mb-4 text-gray-200">Quick Links</h4>
             <ul className="space-y-2 text-sm text-gray-400">
-              <li><a href="/" className="hover:text-red-400 transition-colors">Home</a></li>
-              <li><a href="/dashboard" className="hover:text-red-400 transition-colors">Dashboard</a></li>
-              <li><a href="/history" className="hover:text-red-400 transition-colors">History</a></li>
-              <li><a href="#about" className="hover:text-red-400 transition-colors">About</a></li>
+              <li><Link to="/" className="hover:text-red-400 transition-colors">Home</Link></li>
+              <li><Link to="/dashboard" className="hover:text-red-400 transition-colors">Dashboard</Link></li>
+              <li><Link to="/history" className="hover:text-red-400 transition-colors">History</Link></li>
             </ul>
           </div>
 
@@ -73,9 +73,8 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
             <p>© {currentYear} LimbVital. All rights reserved.</p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <a href="#privacy" className="hover:text-red-400 transition-colors">Privacy Policy</a>
-              <a href="#terms" className="hover:text-red-400 transition-colors">Terms of Service</a>
-              <a href="#disclaimer" className="hover:text-red-400 transition-colors">Medical Disclaimer</a>
+              <Link to="/" className="hover:text-red-400 transition-colors">Privacy Policy</Link>
+              <Link to="/" className="hover:text-red-400 transition-colors">Terms of Service</Link>
             </div>
           </div>
         </div>

@@ -93,9 +93,13 @@ const Dashboard = () => {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 mr-4 text-sm font-medium">
             {isConnected ? (
-               <span className="text-green-600 flex items-center gap-1"><Wifi size={16}/> Connected</span>
+               <span className="text-emerald-500 flex items-center gap-2 px-3 py-1 bg-emerald-500/10 rounded-full border border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                 <Wifi size={16} className="animate-pulse" /> Connected
+               </span>
             ) : (
-               <span className="text-slate-400 flex items-center gap-1"><WifiOff size={16}/> Offline</span>
+               <span className="text-slate-400 flex items-center gap-2 px-3 py-1 bg-slate-100 rounded-full border border-slate-200">
+                 <WifiOff size={16}/> Offline
+               </span>
             )}
           </div>
           {saved && (
@@ -120,18 +124,39 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column: Camera feed + Signal Chart */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-black rounded-3xl overflow-hidden aspect-video relative shadow-2xl border-8 border-white">
+          <div className="bg-slate-900 rounded-3xl overflow-hidden aspect-video relative shadow-2xl border-[6px] border-slate-800 ring-4 ring-slate-900/50">
             <video
               ref={videoRef}
               autoPlay
               playsInline
               muted
-              className={`w-full h-full object-cover scale-x-[-1] ${!isScanning ? 'hidden' : 'block'}`}
+              className={`w-full h-full object-cover scale-x-[-1] transition-opacity duration-700 ${!isScanning ? 'opacity-0 hidden' : 'opacity-100 block'}`}
             />
+            {isScanning && (
+              <div className="absolute inset-0 pointer-events-none">
+                {/* Scanning Line */}
+                <div className="absolute left-0 right-0 h-1 bg-cyan-400 shadow-[0_0_20px_4px_rgba(34,211,238,0.7)] animate-scan z-10" />
+                
+                {/* Grid Overlay */}
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(34,211,238,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(34,211,238,0.05)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
+                
+                {/* Target Brackets */}
+                <div className="absolute top-[20%] left-[25%] w-12 h-12 border-t-4 border-l-4 border-cyan-500/70 rounded-tl-xl transition-all duration-1000 ease-in-out" />
+                <div className="absolute top-[20%] right-[25%] w-12 h-12 border-t-4 border-r-4 border-cyan-500/70 rounded-tr-xl transition-all duration-1000 ease-in-out" />
+                <div className="absolute bottom-[20%] left-[25%] w-12 h-12 border-b-4 border-l-4 border-cyan-500/70 rounded-bl-xl transition-all duration-1000 ease-in-out" />
+                <div className="absolute bottom-[20%] right-[25%] w-12 h-12 border-b-4 border-r-4 border-cyan-500/70 rounded-br-xl transition-all duration-1000 ease-in-out" />
+                
+                {/* Live Indicator */}
+                <div className="absolute top-4 right-4 flex items-center gap-2">
+                  <div className="w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
+                  <span className="text-red-500 text-xs font-bold tracking-widest uppercase shadow-black drop-shadow-md">Live</span>
+                </div>
+              </div>
+            )}
             {!isScanning && (
-              <div className="h-full flex flex-col items-center justify-center text-slate-500 italic bg-slate-900">
-                <Camera size={48} className="mb-4 opacity-20" />
-                Waiting to start...
+              <div className="h-full flex flex-col items-center justify-center text-slate-400 italic bg-slate-900">
+                <Camera size={56} className="mb-4 opacity-20" />
+                Waiting to initialize camera...
               </div>
             )}
           </div>
@@ -146,34 +171,38 @@ const Dashboard = () => {
         <div className="space-y-6">
           <MetricCard
             label="Heart Rate"
-            value={vitals.bpm}
+            value={vitals.bpm || '--'}
             unit="BPM"
             icon={<HeartPulse className="text-red-500" />}
             color="text-red-600"
           />
           <MetricCard
             label="Oxygen (SpO2)"
-            value={vitals.spo2}
+            value={vitals.spo2 || '--'}
             unit="%"
             icon={<Activity className="text-blue-500" />}
             color="text-blue-600"
           />
           <MetricCard
             label="Stress Level"
-            value={vitals.stress ?? 0}
+            value={vitals.stress || '--'}
             unit="/100"
             icon={<Brain className="text-purple-500" />}
             color="text-purple-600"
           />
           
           {/* Status with dynamic color */}
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <span className="text-slate-400 text-xs font-bold uppercase tracking-widest">
+          <div className="bg-white p-6 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 relative overflow-hidden group hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all">
+            <div className="absolute top-0 left-0 w-1 h-full bg-slate-200 group-hover:bg-blue-400 transition-colors" />
+            <span className="text-slate-400 text-xs font-bold uppercase tracking-widest block mb-2">
               System Status
             </span>
-            <p className={`mt-2 text-sm font-semibold ${getStatusColor(vitals.status)}`}>
-              {vitals.status}
-            </p>
+            <div className="flex items-center gap-3">
+              <div className={`w-3 h-3 rounded-full ${isScanning ? 'bg-cyan-400 animate-pulse shadow-[0_0_8px_rgba(34,211,238,0.8)]' : 'bg-slate-300'}`} />
+              <p className={`text-sm font-bold ${getStatusColor(vitals.status)}`}>
+                {vitals.status || 'Awaiting connection...'}
+              </p>
+            </div>
           </div>
 
           {isScanning && vitals.bpm > 0 && (
@@ -194,7 +223,7 @@ const MetricCard = ({ label, value, unit, icon, color }) => (
       <span className="text-slate-500 text-xs font-bold uppercase tracking-widest">{label}</span>
     </div>
     <div className="flex items-end gap-2">
-      <span className={`text-5xl font-black ${color}`}>{value || '0'}</span>
+      <span className={`text-5xl font-black ${color}`}>{value}</span>
       <span className="text-slate-400 font-bold mb-1">{unit}</span>
     </div>
   </div>
